@@ -34,7 +34,7 @@ Theorem 1.2'. Blah blah *blah* blah blah.
 What happens here is:
 
 - `theorem-parser` is a functional parser built from Caterpillar's blocks.
-  - An array of parsers parses runs parsers sequentially.
+  - An array of parsers runs parsers sequentially.
   - Content matches content, splitting text if needed.
   - `p.space` matches either a `space` element or a `" "` text.
   - `p.until` runs the first parser repeatedly until the second succeeds.
