@@ -1,7 +1,7 @@
 [package]
 name = "caterpillar"
 version = "0.1.0"
-entrypoint = "caterpillar.typ"
+entrypoint = "lib.typ"
 authors = ["Arkady Shaldov"]
 license = "MIT"
 description = "Parse content to create your own syntactic rules."

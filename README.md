@@ -1,44 +1,45 @@
-# Inline movement arrows in Typst, clever and customizable
+# A Typst content parser
 
-The package is still in development.
+This package is used to parse the content that the Typst compiler outputs, mainly for creating custom syntactic rules, but hopefully flexible enough for other purposes. It provides a combinatory parsing engine that aims to handle differences in content structure by itself.
 
-## Using the package
+The following example demonstrates the power of Caterpillar on a parser that handles greater-than quote syntax with attributions.
 
-Drawing arrows over a sentence consists of two actions:
-
-- Wrap any number of words with `to` and `from`, providing a number from 0 to 9 as an argument;
-- Surround it all with `move`.
-
-```typst
-#move[#to(9)[Points], lines go from #from(9)[$t$] and to #from(9)[$t$]].
-```
-
-```typst
-#move[
-  #to(1)Some] #from(2)[#to(4)[complex]] #from(1)[arrow] #to(2)[#from(4)[system]] (#to(3)[and] #from(3)[more])
-]
+Suppose you are writing notes in raw text, formatting theorems like this:
 
 ```
-
-The package will:
-- find all you `from`s and `to`s and draw arrows between those with the same ids;
-- understand automatically where to place the arrow to avoid collapsing;
-- add margins around the block;
-
-### Using with `eggs`
-
-It so happens that movement arrows are usually placed on linguistic examples. The package has been tested to work with `eggs` 0.7.0 and above (earlier versions may have non-convergence problems).
-
-**Caveat.** `eggs` aligns the example number by the upper border. Arrows above examples will cause misalignment of the example number and the example text. The solution is to wrap the whole example in `move`, like this:
-
-```typst
-#move[#example[
-  #from(0)[from] #to(1)[to] #to(0)[to] #from(1)[from]
-]]
+Theorem 1.2'. Blah blah *blah* blah blah.
 ```
 
-### What this package doesn't do (yet)
+It so happens that you need to compile it to PDF using a theorem formatter (e.g. Beautiframe). You do not want to rewrite every theorem in Typst script: you appreciate the conciseness of your own syntax. Caterpillar will parse the content to find every paragraph that is a theorem, and show them as theorems.
 
-- put labels on the arrows
-- allow for tip customization (gotta connect tiptoe)
-- support arrows wrapping over lines
+```typst
+#import "@preview/caterpillar:0.1.0": *
+#import parsers as p
+#import "@preview/beautiframe:0.4.0": theorem, beautiframe-setup
+#beautiframe-setup(style: "academic")
+
+#let theorem-parser = (
+  ([Theorem], p.space),
+  p.until(p.anything, ([.], p.space)),
+  ([.], p.space)
+)
+#let theorem-handler((_, num, _), rest) = theorem(rest, number: num.join())
+#show par: crawl.with((theorem-parser, theorem-handler))
+
+Theorem 1.2'. Blah blah *blah* blah blah.
+```
+
+![Example that shows a beautiframe theorem](assets/example.svg)
+
+What happens here is:
+
+- `theorem-parser` is a functional parser built from Caterpillar's blocks.
+  - An array of parsers parses runs parsers sequentially.
+  - Content matches content, splitting text if needed.
+  - `p.space` matches either a `space` element or a `" "` text.
+  - `p.until` runs the first parser repeatedly until the second succeeds.
+  - `p.anything` matches any piece of content.
+- `theorem-handler` takes the result of parsing --- the parsed content and the remaining part --- and builds a theorem from it.
+- `crawl` in a show rule assembles the pipeline: runs any number of parsers on every paragraph, and, if a parser succeeds, applies the corresponing handler on its output.
+
+There are more constants and combinators. Regex is supported, and so are fully custom parsers. See [documentation.pdf](documentation.pdf) for a tutorial and an API reference.
