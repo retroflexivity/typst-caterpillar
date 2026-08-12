@@ -2,7 +2,7 @@
 
 This package is used to parse the content that the Typst compiler outputs, mainly for creating custom syntactic rules, but hopefully flexible enough for other purposes. It provides a combinatory parsing engine that aims to handle differences in content structure by itself.
 
-The following example demonstrates the power of Caterpillar on a parser that handles greater-than quote syntax with attributions.
+**DISCLAIMER**. This package is for personal use only. It is built around content inspection, which is an antipattern and undocumented behavior that might change without warnings. It also introduces certain obscurity to documents, despite making them look cleaner. Do not you this in production.
 
 Suppose you are writing notes in raw text, formatting theorems like this:
 
