@@ -10,7 +10,7 @@ Suppose you are writing notes in raw text, formatting theorems like this:
 Theorem 1.2'. Blah blah *blah* blah blah.
 ```
 
-It so happens that you need to compile it to PDF using a theorem formatter (e.g. Beautiframe). You do not want to rewrite every theorem in Typst script: you appreciate the conciseness of your own syntax. Caterpillar will parse the content to find every paragraph that is a theorem, and show them as theorems.
+It so happens that you need to compile it to PDF using a theorem formatter (e.g. Beautiframe). You do not want to rewrite every theorem in Typst script: you appreciate the conciseness of your own syntax. Great news: Caterpillar will parse the content to find every paragraph that is a theorem, and show them as theorems.
 
 ```typst
 #import "@preview/caterpillar:0.1.0": *
