@@ -6,7 +6,7 @@
 #parse(space)[ text]
 
 = string match
-#parse(multiple(([but], space)))[but why?]
+#parse(multiple([but], space))[but why?]
 
 = emph match
 #parse(space)[_text_  text]
